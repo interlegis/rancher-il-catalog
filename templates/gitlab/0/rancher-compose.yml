@@ -42,6 +42,12 @@ catalog:
       required: true
       type: "string"
       default: "local"
+    - variable: EXTERNAL
+      description: "Whether GitLab volumes are stack scoped (false) or environment scoped (true)"
+      label: "Are gitlab volumes external?"
+      required: true
+      type: "boolean"
+      default: false
 
 services:
   gitlab-server:

@@ -40,7 +40,10 @@ services:
 volumes:
   gitlab-etc:
     driver: ${VOLUME_DRIVER}
+    external: ${EXTERNAL}
   gitlab-log:
     driver: ${VOLUME_DRIVER}
+    external: ${EXTERNAL}
   gitlab-opt:
     driver: ${VOLUME_DRIVER}
+    external: ${EXTERNAL}
