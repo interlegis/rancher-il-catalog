@@ -40,10 +40,16 @@ services:
 volumes:
   gitlab-etc:
     driver: ${VOLUME_DRIVER}
-    external: ${EXTERNAL}
+    {{- if eq .Values.EXTERNAL "true" }}
+    external: true
+    {{- end }}
   gitlab-log:
     driver: ${VOLUME_DRIVER}
-    external: ${EXTERNAL}
+    {{- if eq .Values.EXTERNAL "true" }}
+    external: true
+    {{- end }}
   gitlab-opt:
     driver: ${VOLUME_DRIVER}
-    external: ${EXTERNAL}
+    {{- if eq .Values.EXTERNAL "true" }}
+    external: true
+    {{- end }}
