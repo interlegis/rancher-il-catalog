@@ -1,0 +1,60 @@
+version: '2'
+
+catalog:
+  name: "Gitlab Community"
+  version: "9.3.7-ce.0"
+  description: "Gitlab CE is a free GitHub alternative"
+  minimum_rancher_version: v1.2.0
+  questions:
+    - variable: HOST_AFFINITY
+      description: "Gitlab will run on hosts with this label"
+      label: "Host affinity label"
+      required: false
+      default: "role=gitlab"
+      type: "string"
+    - variable: GIT_HOSTNAME
+      description: "Hostname used to access GitLab"
+      label: "Hostname"
+      required: true
+      default: "git"
+      type: "string"
+    - variable: GIT_DOMAIN
+      description: "Domain where this GitLab instance is hosted on"
+      label: "Git Domain"
+      required: true
+      default: "domain.com"
+      type: "string"
+    - variable: SMTP_SERVER
+      description: "SMTP server used to send backup messages"
+      label: "SMTP Server"
+      required: true
+      type: "string"
+      default: "smtp.domain.com"
+    - variable: MAIL_TO
+      description: "E-mail address to receive backup status messages"
+      label: "E-mail Address"
+      required: true
+      type: "string"
+      default: "you@domain.com"
+    - variable: VOLUME_DRIVER
+      description: "GitLab volumes driver"
+      label: "Volume Driver"
+      required: true
+      type: "string"
+      default: "local"
+
+services:
+  gitlab-server:
+    scale: 1
+    retain_ip: true
+    health_check:
+      port: 80
+      interval: 30000
+      unhealthy_threshold: 3
+      strategy: recreate
+      response_timeout: 2000
+      healthy_threshold: 2
+
+  gitlab-data:
+    scale: 1
+    retain_ip: true

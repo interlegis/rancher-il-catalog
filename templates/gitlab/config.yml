@@ -1,0 +1,6 @@
+name: GitLab CE
+description: |
+  GitLab CE is a free alternative to GitHub.
+version: 9.3.7-ce.0
+category: Versioning
+maintainer: Fabio Rauber <fabiorauber@gmail.com>
