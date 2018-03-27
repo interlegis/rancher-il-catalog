@@ -24,6 +24,12 @@ catalog:
       required: true
       default: "Câmara Municipal"
       type: "string"
+    - variable: SITE_LOGO
+      description: "URL (HTTPS) com Logotipo da página inicial do E-democracia"
+      label: "Logotipo"
+      required: false
+      default: ""
+      type: "string"
     - variable: ADMIN_EMAIL
       description: "E-mail do administrador"
       label: "Admin E-mail"
