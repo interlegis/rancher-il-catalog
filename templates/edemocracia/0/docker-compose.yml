@@ -235,6 +235,8 @@ services:
 
   discourse:
     image: labhackercd/discourse-docker
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     command: ./start-web.sh
     volumes:
       - discourse:/var/www/discourse
@@ -280,7 +282,7 @@ services:
 
  
   db:
-    image: postgres:9.6-3-alpine
+    image: postgres:9.6.3-alpine
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     environment:
