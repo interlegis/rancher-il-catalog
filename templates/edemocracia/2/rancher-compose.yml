@@ -66,7 +66,7 @@ catalog:
     - variable: AUDIENCIAS_WEBSERVICE_URL
       description: "URL do WebServices para o Audiências Públicas"
       label: "Webservice URL"
-      required: true
+      required: false 
       type: "string"
       default: "https://infoleg.camara.leg.br/ws-pauta/evento/interativo"
     - variable: VOLUME_DRIVER
