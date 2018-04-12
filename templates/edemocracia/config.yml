@@ -1,7 +1,7 @@
 name: E-Democracia
 description: |
   Portal que visa ampliar a participação social no processo legislativo e aproximar cidadãos e seus representantes por meio da interação digital.
-version: 1.0.1
+version: 1.1.1
 category: Collaboration
 maintainer: Fabio Rauber <fabiorauber@gmail.com>
 labels:

@@ -25,7 +25,7 @@ services:
 
 
   edemocracia:
-    image: labhackercd/edemocracia:1.0.1
+    image: labhackercd/edemocracia:1.1.1
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     volumes:
