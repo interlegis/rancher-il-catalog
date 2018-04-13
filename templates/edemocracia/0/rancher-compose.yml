@@ -2,7 +2,7 @@ version: '2'
 
 catalog:
   name: "E-democracia"
-  version: "1.0.0-dev"
+  version: "1.1.1"
   description: "Portal que visa ampliar a participação social no processo legislativo e aproximar cidadãos e seus representantes por meio da interação digital."
   uuid: edemocracia-0
   minimum_rancher_version: v1.4.1
@@ -66,7 +66,7 @@ catalog:
     - variable: AUDIENCIAS_WEBSERVICE_URL
       description: "URL do WebServices para o Audiências Públicas"
       label: "Webservice URL"
-      required: true
+      required: false 
       type: "string"
       default: "https://infoleg.camara.leg.br/ws-pauta/evento/interativo"
     - variable: VOLUME_DRIVER
@@ -83,6 +83,36 @@ catalog:
       options:
         - 'True'
         - 'False'
+    - variable: SOCIAL_AUTH_FACEBOOK_KEY
+      description: "Chave de Site do Facebook"
+      label: "Facebook Site Key"
+      required: false
+      type: "string"
+    - variable: SOCIAL_AUTH_FACEBOOK_SECRET
+      description: "Chave Secret do Facebook"
+      label: "Facebook Secret Key"
+      required: false
+      type: "string"
+    - variable: SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+      description: "Chave de Site do Google"
+      label: "Google Site Key"
+      required: false
+      type: "string"
+    - variable: SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+      description: "Chave Secret do Google"
+      label: "Google Secret Key"
+      required: false
+      type: "string"
+    - variable: GOOGLE_ANALYTICS_ID
+      description: "ID do Google Analytics"
+      label: "Google Analytics ID"
+      required: false
+      type: "string"
+    - variable: OLARK_ID
+      description: "ID do OLARK"
+      label: "Olark ID"
+      required: false
+      type: "string"
     - variable: RECAPTCHA_SITE_KEY
       description: "Chave de Site do Recaptcha"
       label: "Recaptcha Site Key"
@@ -91,7 +121,7 @@ catalog:
       default: "altereme"
     - variable: RECAPTCHA_PRIVATE_KEY
       description: "Chave Privada do Recaptcha"
-      label: "Recaptcha Priavte Key"
+      label: "Recaptcha Private Key"
       required: true
       type: "string"
       default: "altereme"
