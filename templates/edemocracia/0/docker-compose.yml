@@ -85,7 +85,7 @@ services:
       AUDIENCIAS_ENABLED: 'True'
       AUDIENCIAS_UPSTREAM: http://audienciasweb:8000/audiencias
       AUDIENCIAS_API_URL:
-      AUDIENCIAS_API_KEY:
+      AUDIENCIAS_API_KEY: ${API_KEY}
       DISCOURSE_ENABLED: 'True'
       DISCOURSE_UPSTREAM: http://discourse:8080/expressao
       DISCOURSE_SSO_SECRET: sso_secret
