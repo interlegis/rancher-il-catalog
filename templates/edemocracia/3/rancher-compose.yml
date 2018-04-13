@@ -93,6 +93,16 @@ catalog:
       label: "Facebook Secret Key"
       required: false
       type: "string"
+    - variable: SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+      description: "Chave de Site do Google"
+      label: "Google Site Key"
+      required: false
+      type: "string"
+    - variable: SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+      description: "Chave Secret do Google"
+      label: "Google Secret Key"
+      required: false
+      type: "string"
     - variable: GOOGLE_ANALYTICS_ID
       description: "ID do Google Analytics"
       label: "Google Analytics ID"
