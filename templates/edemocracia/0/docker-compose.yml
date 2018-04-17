@@ -105,6 +105,7 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PW}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_USERNAME: admin
+      SITE_NAME: ${SITE_NAME}
       EMAIL_HOST: ${SMTP_HOST}
       EMAIL_HOST_USER: ''
       EMAIL_HOST_PASSWORD: ''
@@ -153,6 +154,7 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PW}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_USERNAME: admin
+      SITE_NAME: ${SITE_NAME}
       EMAIL_HOST: ${SMTP_HOST}
       EMAIL_HOST_USER: ''
       EMAIL_HOST_PASSWORD: ''
