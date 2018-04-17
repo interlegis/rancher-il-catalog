@@ -2,7 +2,7 @@ version: '2'
 
 catalog:
   name: "E-democracia"
-  version: "1.1.1"
+  version: "1.2.0"
   description: "Portal que visa ampliar a participação social no processo legislativo e aproximar cidadãos e seus representantes por meio da interação digital."
   uuid: edemocracia-0
   minimum_rancher_version: v1.4.1

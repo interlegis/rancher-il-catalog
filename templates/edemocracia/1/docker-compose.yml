@@ -25,7 +25,7 @@ services:
 
 
   edemocracia:
-    image: labhackercd/edemocracia:1.1.1
+    image: labhackercd/edemocracia:1.2.0
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     volumes:
@@ -87,7 +87,7 @@ services:
       DISCOURSE_SSO_SECRET: ${API_KEY}
 
   audienciasweb:
-    image: labhackercd/audiencias-publicas:2.0.1
+    image: labhackercd/audiencias-publicas:2.1.0
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     command: ./start-web.sh
@@ -140,7 +140,7 @@ services:
       - redis
 
   audienciasworker:
-    image: labhackercd/audiencias-publicas:2.0.1
+    image: labhackercd/audiencias-publicas:2.1.0
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     command: ./start-worker.sh
