@@ -1,0 +1,163 @@
+version: '2'
+
+catalog:
+  name: "E-democracia"
+  version: "1.2.0"
+  description: "Portal que visa ampliar a participação social no processo legislativo e aproximar cidadãos e seus representantes por meio da interação digital."
+  uuid: edemocracia-0
+  minimum_rancher_version: v1.4.1
+  questions:
+    - variable: HOST_AFFINITY
+      description: "Os containers rodarão nos hosts com o label especificado"
+      label: "Host Affinity Label"
+      required: true
+      default: "role=apps"
+      type: "string"
+    - variable: EDEMO_URL
+      description: "URL para acesso ao E-democracia"
+      label: "URL"
+      required: true
+      type: "string"
+    - variable: SITE_NAME
+      description: "Nome do Site E-Democracia"
+      label: "Nome do Site"
+      required: true
+      default: "Câmara Municipal"
+      type: "string"
+    - variable: SITE_LOGO
+      description: "URL (HTTPS) com Logotipo da página inicial do E-democracia"
+      label: "Logotipo"
+      required: false
+      default: ""
+      type: "string"
+    - variable: ADMIN_EMAIL
+      description: "E-mail do administrador"
+      label: "Admin E-mail"
+      required: true
+      type: "string"
+    - variable: ADMIN_PW
+      description: "Senha do usuário Admin"
+      label: "Senha de administrador"
+      required: true
+      default: "altereme"
+      type: "password"
+    - variable: SMTP_HOST
+      description: "SMTP host para envio de e-mail"
+      label: "SMTP server"
+      required: true
+      type: "string"
+    - variable: SMTP_PORT
+      description: "Porta do SMTP Host para envio de e-mail"
+      label: "SMTP port"
+      required: true
+      default: "25"
+      type: "int"
+    - variable: API_KEY
+      description: "Chave de API do E-democracia"
+      label: "Chave de API"
+      required: true
+      default: "uma_chave_de_api_secreta_mesmo"
+      type: "password"
+    - variable: NOTIF_EMAIL_LIST
+      description: "Endereços de E-mail a serem notificados pelo Audiências Públicas"
+      label: "Lista de endereços"
+      required: true
+      type: "string"
+    - variable: AUDIENCIAS_WEBSERVICE_URL
+      description: "URL do WebServices para o Audiências Públicas"
+      label: "Webservice URL"
+      required: false
+      type: "string"
+      default: ""
+    - variable: VOLUME_DRIVER
+      description: "Driver de volumes do E-Democracia"
+      label: "Volume Driver"
+      required: true
+      type: "string"
+      default: "rancher-nfs"
+    - variable: DEBUG
+      description: "Habilitar modo de Debug"
+      label: "Modo de Debug"
+      required: true
+      type: "enum"
+      options:
+        - 'True'
+        - 'False'
+    - variable: SOCIAL_AUTH_FACEBOOK_KEY
+      description: "Chave de Site do Facebook"
+      label: "Facebook Site Key"
+      required: false
+      type: "string"
+    - variable: SOCIAL_AUTH_FACEBOOK_SECRET
+      description: "Chave Secret do Facebook"
+      label: "Facebook Secret Key"
+      required: false
+      type: "string"
+    - variable: SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+      description: "Chave de Site do Google"
+      label: "Google Site Key"
+      required: false
+      type: "string"
+    - variable: SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+      description: "Chave Secret do Google"
+      label: "Google Secret Key"
+      required: false
+      type: "string"
+    - variable: GOOGLE_ANALYTICS_ID
+      description: "ID do Google Analytics"
+      label: "Google Analytics ID"
+      required: false
+      type: "string"
+    - variable: OLARK_ID
+      description: "ID do OLARK"
+      label: "Olark ID"
+      required: false
+      type: "string"
+    - variable: RECAPTCHA_SITE_KEY
+      description: "Chave de Site do Recaptcha"
+      label: "Recaptcha Site Key"
+      required: true
+      type: "string"
+      default: "altereme"
+    - variable: RECAPTCHA_PRIVATE_KEY
+      description: "Chave Privada do Recaptcha"
+      label: "Recaptcha Private Key"
+      required: true
+      type: "string"
+      default: "altereme"
+    - variable: ENABLE_WIKILEGIS
+      description: "Habilitar Wikilegis"
+      label: "Habilitar Wikilegis"
+      required: true
+      type: "enum"
+      options:
+        - 'True'
+        - 'False'
+    - variable: ENABLE_AUDIENCIAS
+      description: "Habilitar Audiências Interativas"
+      label: "Habilitar Audiências Interativas"
+      required: true
+      type: "enum"
+      options:
+        - 'True'
+        - 'False'
+    - variable: ENABLE_DISCOURSE
+      description: "Habilitar Expressão"
+      label: "Habilitar Expressão"
+      required: true
+      type: "enum"
+      options:
+        - 'True'
+        - 'False'
+
+#services:
+#  redis:
+#    scale: 1
+#    health_check:
+#      port: 6379
+#      interval: 30000
+#      initializing_timeout: 10000
+#      unhealthy_threshold: 3
+#      strategy: recreate
+#      response_timeout: 2000
+#      healthy_threshold: 2
