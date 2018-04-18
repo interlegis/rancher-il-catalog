@@ -29,7 +29,7 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     volumes:
-      - edemocracia:/var/labhacker/edemocracia/:z
+      - edemocracia:/var/labhacker/edemocracia/src/public/:z
     command: ./runserver-production
     links:
       - db
