@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  minbackup:
+    image: interlegis/psqlminiobkp:latest
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+      io.rancher.container.start_once: 'true'
+      cron.schedule: ${CRON_SCHEDULE}
+    environment:
+      - MINIO_SERVER=${MINIO_SERVER}
+      - MINIO_ACCESS_KEY=${MINIO_AKEY}
+      - MINIO_SECRET_KEY=${MINIO_SKEY}
+      - MINIO_BUCKET=${MINIO_BUCKET}
+      - PGPASSWORD=${PG_PASSWORD}
+      - KEEP_DAYS=${KEEP_DAYS}
+    command: [ "${PG_DBNAME}", "-h", "${PG_HOST}", "-U", "${PG_USER}"]
