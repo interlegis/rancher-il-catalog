@@ -3,7 +3,7 @@ version: '2'
 services:
 
   nginx:
-    image: labhackercd/nginx-edemocracia:latest
+    image: labhackercd/nginx-edemocracia:1.0.0
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
       traefik.port: 80
@@ -191,7 +191,7 @@ services:
       - 'audienciasweb'
 
   wikilegis:
-    image: labhackercd/wikilegis:2.0.0
+    image: labhackercd/wikilegis:2.1.0
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     command: ./start.sh
@@ -236,7 +236,7 @@ services:
       - "8000"
 
   discourse:
-    image: labhackercd/discourse-docker
+    image: labhackercd/discourse-docker:2.0.20180703
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
     command: ./start-web.sh
