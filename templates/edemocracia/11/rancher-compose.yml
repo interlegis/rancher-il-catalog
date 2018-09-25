@@ -18,6 +18,12 @@ catalog:
       label: "URL"
       required: true
       type: "string"
+    - variable: SITE_NAME
+      description: "Nome do Site E-Democracia"
+      label: "Nome do Site"
+      required: true
+      default: "Câmara Municipal"
+      type: "string"
     - variable: ADMIN_EMAIL
       description: "E-mail do administrador"
       label: "Admin E-mail"
