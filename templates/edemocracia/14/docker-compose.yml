@@ -1,0 +1,311 @@
+version: '2'
+
+services:
+
+  nginx:
+    image: labhackercd/nginx-edemocracia:1.0.0
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+      traefik.port: 80
+      traefik.enable: true
+      traefik.frontend.rule: Host:${EDEMO_URL}
+      traefik.acme.domains: ${EDEMO_URL}
+    depends_on:
+      - edemocracia
+      - audienciasweb
+    volumes:
+      - edemocracia:/var/labhacker/edemocracia/src/public/
+      - wikilegis:/var/labhacker/wikilegis/wikilegis/public/
+      - audiencias:/var/labhacker/audiencias/public/
+      - discourse_assets:/var/www/discourse/public/assets/
+      - discourse_js:/var/www/discourse/public/javascripts/
+      - discourse_img:/var/www/discourse/public/images/
+      - discourse_cache:/var/www/discourse/tmp/stylesheet-cache/
+    links:
+      - edemocracia
+    environment:
+      NAME_RESOLVER: '127.0.0.11'
+
+
+  edemocracia:
+    image: labhackercd/edemocracia:1.3.3
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+    volumes:
+      - edemocracia:/var/labhacker/edemocracia/src/public/:z
+    command: ./runserver-production
+    links:
+      - db
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PW}
+      ADMIN_USERNAME: admin
+      SITE_NAME: ${SITE_NAME}
+      SITE_URL: https://${EDEMO_URL}
+      DEBUG: ${DEBUG}
+      SECRET_KEY: ${API_KEY}
+      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY}
+      RECAPTCHA_PRIVATE_KEY: ${RECAPTCHA_PRIVATE_KEY}
+      OLARK_ID: ${OLARK_ID}
+      GOOGLE_ANALYTICS_ID: ${GOOGLE_ANALYTICS_ID}
+      ALLOWED_HOSTS: "${EDEMO_URL}"
+      DATABASE_ENGINE: postgresql_psycopg2
+      DATABASE_NAME: edemocracia
+      DATABASE_USER: root
+      DATABASE_PASSWORD: ${ADMIN_PW}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: ${SOCIAL_AUTH_GOOGLE_OAUTH2_KEY}
+      SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: ${SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET}
+      SOCIAL_AUTH_FACEBOOK_KEY: ${SOCIAL_AUTH_FACEBOOK_KEY}
+      SOCIAL_AUTH_FACEBOOK_SECRET: ${SOCIAL_AUTH_FACEBOOK_SECRET}
+      SOCIAL_AUTH_REDIRECT_IS_HTTPS: 'True'
+      EMAIL_HOST: ${SMTP_HOST}
+      EMAIL_PORT: ${SMTP_PORT}
+      EMAIL_HOST_USER: ''
+      EMAIL_HOST_PASSWORD: ''
+      EMAIL_USE_TLS: ''
+      EMAIL_BACKEND: django.core.mail.backends.smtp.EmailBackend
+      DEFAULT_FROM_EMAIL: '"Portal e-Democracia" <${ADMIN_EMAIL}>'
+      WIKILEGIS_ENABLED: ${ENABLE_WIKILEGIS}
+      WIKILEGIS_UPSTREAM: http://wikilegis:8000
+      WIKILEGIS_API_URL: '/api/v1/'
+      WIKILEGIS_API_KEY: ${API_KEY}
+      AUDIENCIAS_ENABLED: ${ENABLE_AUDIENCIAS}
+      AUDIENCIAS_UPSTREAM: http://audienciasweb:8000/audiencias
+      AUDIENCIAS_API_URL:
+      AUDIENCIAS_API_KEY: ${API_KEY}
+      DISCOURSE_ENABLED: ${ENABLE_DISCOURSE}
+      DISCOURSE_UPSTREAM: http://discourse:8080/expressao
+      DISCOURSE_SSO_SECRET: ${SSO_SECRET}
+
+  audienciasweb:
+    image: labhackercd/audiencias-publicas:3.3.1
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+    command: ./start-web.sh
+    restart: on-failure
+    links:
+      - db
+      - redis
+    volumes:
+      - audiencias:/var/labhacker/audiencias/public/:z
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PW}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_USERNAME: admin
+      SITE_NAME: ${SITE_NAME}
+      SITE_DOMAIN: ${EDEMO_URL}
+      EMAIL_HOST: ${SMTP_HOST}
+      EMAIL_HOST_USER: ''
+      EMAIL_HOST_PASSWORD: ''
+      EMAIL_PORT: ${SMTP_PORT}
+      EMAIL_USE_TLS: 'False'
+      DEFAULT_FROM_EMAIL: '"Portal e-Democracia[audiencias]" <${ADMIN_EMAIL}>'
+      NOTIFICATION_EMAIL_LIST: ${ADMIN_EMAIL},${NOTIF_EMAIL_LIST}
+      DJANGO_SECRET_KEY: ${API_KEY}
+      DEBUG: ${DEBUG}
+      ENABLE_REMOTE_USER: 'True'
+      URL_PREFIX: audiencias
+      FORCE_SCRIPT_NAME: /audiencias
+      STATIC_URL: /audiencias/static/
+      SESSION_COOKIE_NAME: audiencias_session
+      LOGIN_URL: /
+      LOGIN_REDIRECT_URL: /
+      LOGOUT_REDIRECT_URL: /
+      ALLOWED_HOSTS: 'audienciasweb, localhost, 127.0.0.1, ${EDEMO_URL}'
+      GOOGLE_ANALYTICS_ID: ${GOOGLE_ANALYTICS_ID}
+      OLARK_ID: ${OLARK_ID}
+      DATABASE_ENGINE: postgresql_psycopg2
+      DATABASE_NAME: audiencias
+      DATABASE_PASSWORD: ${ADMIN_PW}
+      DATABASE_USER: root
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DEBUG: 'False'
+      REDIS_SERVER: redis
+      WEBSERVICE_URL: ${AUDIENCIAS_WEBSERVICE_URL}
+      COMPRESS_OFFLINE: 'True'
+      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY}
+      RECAPTCHA_PRIVATE_KEY: ${RECAPTCHA_PRIVATE_KEY}
+      WORDS_BLACK_LIST: ${WORDS_BLACKLIST}
+
+    depends_on:
+      - db
+      - redis
+
+  audienciasworker:
+    image: labhackercd/audiencias-publicas:3.3.1
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+    command: ./start-worker.sh
+    links:
+      - redis
+      - db
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PW}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_USERNAME: admin
+      SITE_NAME: ${SITE_NAME}
+      SITE_DOMAIN: ${EDEMO_URL}
+      EMAIL_HOST: ${SMTP_HOST}
+      EMAIL_HOST_USER: ''
+      EMAIL_HOST_PASSWORD: ''
+      EMAIL_PORT: ${SMTP_PORT}
+      EMAIL_USE_TLS: 'False'
+      DEFAULT_FROM_EMAIL: '"Portal e-Democracia[audiencias]" <${ADMIN_EMAIL}>'
+      NOTIFICATION_EMAIL_LIST: ${ADMIN_EMAIL},${NOTIF_EMAIL_LIST}
+      DJANGO_SECRET_KEY: ${API_KEY}
+      DEBUG: ${DEBUG}
+      ENABLE_REMOTE_USER: 'True'
+      URL_PREFIX: audiencias
+      FORCE_SCRIPT_NAME: /audiencias
+      STATIC_URL: /audiencias/static/
+      SESSION_COOKIE_NAME: audiencias_session
+      LOGIN_URL: /
+      LOGIN_REDIRECT_URL: /
+      LOGOUT_REDIRECT_URL: /
+      ALLOWED_HOSTS: 'audienciasweb, audienciasworker, localhost, 127.0.0.1, ${EDEMO_URL}'
+      GOOGLE_ANALYTICS_ID: ${GOOGLE_ANALYTICS_ID}
+      OLARK_ID: ${OLARK_ID}
+      DATABASE_ENGINE: postgresql_psycopg2
+      DATABASE_NAME: audiencias
+      DATABASE_PASSWORD: ${ADMIN_PW}
+      DATABASE_USER: root
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DEBUG: 'False'
+      REDIS_SERVER: redis
+      WEBSERVICE_URL: ${AUDIENCIAS_WEBSERVICE_URL}
+      COMPRESS_OFFLINE: 'True'
+      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY}
+      RECAPTCHA_PRIVATE_KEY: ${RECAPTCHA_PRIVATE_KEY}
+      WORDS_BLACK_LIST: ${WORDS_BLACKLIST}
+    volumes:
+      - audiencias:/var/labhacker/audiencias/public/:z
+    depends_on:
+      - 'audienciasweb'
+
+  wikilegis:
+    image: labhackercd/wikilegis:2.3.0
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+    command: ./start.sh
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - wikilegis:/var/labhacker/wikilegis/wikilegis/public/:z
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PW}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      SITE_NAME: ${SITE_NAME}
+      SITE_DOMAIN: ${EDEMO_URL}
+      API_KEY: ${API_KEY}
+      SECRET_KEY: ${API_KEY}
+      FORCE_SCRIPT_NAME: /wikilegis
+      DEBUG: 'True'
+      ALLOWED_HOSTS: '${EDEMO_URL},wikilegisweb,wikilegis,localhost,127.0.0.1'
+      LOGIN_URL: /
+      LOGIN_REDIRECT_URL: /
+      AUTH_USER_MODEL: accounts.User
+      ENABLE_REMOTE_USER: 'True'
+      SESSION_COOKIE_NAME: wikilegis_session
+      EMAIL_HOST: ${SMTP_HOST}
+      EMAIL_PORT: ${SMTP_PORT}
+      EMAIL_HOST_USER: ''
+      EMAIL_HOST_PASSWORD: ''
+      EMAIL_USE_TLS:
+      DEFAULT_FROM_EMAIL: '"Portal e-Democracia[Wikilegis]" <${ADMIN_EMAIL}>'
+      LANGUAGE_CODE: pt-br
+      TIME_ZONE: America/Sao_Paulo
+      STATIC_URL: /wikilegis/static/
+      MEDIA_URL: /wikilegis/media/
+      DATABASE_ENGINE: postgresql_psycopg2
+      DATABASE_NAME: wikilegis
+      DATABASE_PASSWORD: ${ADMIN_PW}
+      DATABASE_USER: root
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+    expose:
+      - "8000"
+
+  discourse:
+    image: labhackercd/discourse-docker:2.0.20180703
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+    command: ./start-web.sh
+    volumes:
+      - discourse_assets:/var/www/discourse/public/assets/:z
+      - discourse_js:/var/www/discourse/public/javascripts/:z
+      - discourse_img:/var/www/discourse/public/images/:z
+      - discourse_cache:/var/www/discourse/tmp/stylesheet-cache/:z
+    expose:
+      - "8080"
+    depends_on:
+      - db
+      - redis
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PW}
+      ADMIN_USERNAME: 'admin'
+      RAILS_ENV: 'production'
+      DISCOURSE_DB_HOST: db
+      DISCOURSE_DB_PORT: '5432'
+      DISCOURSE_DB_NAME: 'discourse'
+      DISCOURSE_DB_USERNAME: 'root'
+      DISCOURSE_DB_PASSWORD: ${ADMIN_PW}
+      DISCOURSE_HOSTNAME: ${EDEMO_URL}\/expressao
+      DISCOURSE_SMTP_ADDRESS: ${SMTP_HOST}
+      DISCOURSE_SMTP_PORT: ${SMTP_PORT}
+      DISCOURSE_SMTP_USER_NAME: ''
+      DISCOURSE_SMTP_PASSWORD: ''
+      DISCOURSE_DEVELOPER_EMAILS:
+      DISCOURSE_REDIS_HOST: 'redis'
+      DISCOURSE_REDIS_PORT: 6379
+      DISCOURSE_RELATIVE_URL_ROOT: '/expressao'
+      DISCOURSE_CONTACT_EMAIL: ${ADMIN_EMAIL}
+      DISCOURSE_CONTACT_URL: '${EDEMO_URL}'
+      DISCOURSE_NOTIFICATION_EMAIL: '${ADMIN_EMAIL}'
+      DISCOURSE_SSO_URL: 'https:\/\/${EDEMO_URL}'
+      DISCOURSE_SSO_SECRET: ${SSO_SECRET}
+      DISCOURSE_FORCE_HOSTNAME: ${EDEMO_URL}\/expressao
+
+  redis:
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+    image: redis:alpine
+
+
+  db:
+    image: postgres:9.6.3-alpine
+    labels:
+      io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: ${ADMIN_PW}
+      POSTGRES_DB: root
+      PGDATA : /var/lib/postgresql/data/
+    volumes:
+     - pg_data:/var/lib/postgresql/data/
+
+
+volumes:
+  edemocracia:
+    driver: ${VOLUME_DRIVER}
+  audiencias:
+    driver: ${VOLUME_DRIVER}
+  wikilegis:
+    driver: ${VOLUME_DRIVER}
+  pg_data:
+    driver: ${VOLUME_DRIVER}
+  discourse_assets:
+    driver: ${VOLUME_DRIVER}
+  discourse_js:
+    driver: ${VOLUME_DRIVER}
+  discourse_img:
+    driver: ${VOLUME_DRIVER}
+  discourse_cache:
+    driver: ${VOLUME_DRIVER}
+
