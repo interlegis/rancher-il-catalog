@@ -1,0 +1,77 @@
+version: '2'
+
+catalog:
+  name: "Backup PostgreSQL to Minio bucket"
+  version: "0.0.2"
+  description: "Backup a PostgreSQL database to Minio bucker periodically (using rancher-container-crontab)"
+  minimum_rancher_version: v1.4.1
+  questions:
+    - variable: MINIO_SERVER
+      description: "Minio server URL"
+      label: "Minio URL"
+      required: true
+      default: "https://minio.url/"
+      type: "string"
+    - variable: MINIO_AKEY
+      description: "Minio Access Key"
+      label: "Access Key"
+      required: true
+      type: "string"
+    - variable: MINIO_SKEY
+      description: "Minio Secret Key"
+      label: "Secret Key"
+      required: true
+      type: "string"
+    - variable: MINIO_BUCKET
+      description: "Minio bucket name to save the backups."
+      label: "Minio Bucket"
+      required: true
+      default: "postgresqlbkp"
+      type: "string"
+    - variable: HOST_AFFINITY
+      description: "Host label to run PostgreSQL Minio Backup container"
+      label: "Host Affinity Label"
+      required: true
+      default: "role=psqlminbkp"
+      type: "string"
+    - variable: PG_HOST
+      description: "Postgres Database Server Host Name"
+      label: "Hostname"
+      required: true
+      default: "your_postgres_server"
+      type: "string"
+    - variable: PG_DBNAME
+      description: "Postgres Database name"
+      label: "DB Name"
+      required: true
+      default: "db"
+      type: "string"
+    - variable: PG_USER
+      description: "Postgres Database Username"
+      label: "Username"
+      required: true
+      default: "user"
+      type: "string"
+    - variable: PG_PASSWORD
+      description: "Postgres Database Password"
+      label: "Database password"
+      required: true
+      default: ""
+      type: "password"
+    - variable: KEEP_DAYS
+      description: "Number of Days to keep database Backup"
+      label: "Keep days"
+      required: true
+      default: "7"
+      type: "int"
+    - variable: CRON_SCHEDULE
+      description: "Cron schedule to use with rancher-container-crontab"
+      label: "Schedule"
+      required: true
+      default: "0 0 3 * * ?"
+      type: "string"
+
+
+services:
+  minbackup:
+    scale: 1
