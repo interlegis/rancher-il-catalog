@@ -2,7 +2,7 @@ version: '2'
 
 services:
   minbackup:
-    image: interlegis/psqlminiobkp:0.0.2
+    image: interlegis/psqlminiobkp:0.0.3
     labels:
       io.rancher.scheduler.affinity:host_label: ${HOST_AFFINITY}
       io.rancher.container.start_once: 'true'

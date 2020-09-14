@@ -1,7 +1,7 @@
 name: Backup PostgreSQL to Minio bucket
 description: |
     Backup a PostgreSQL database to Minio bucket periodically
-version: 0.0.2
+version: 0.0.3
 category: Storage
 maintainer: Fabio Rauber
 
