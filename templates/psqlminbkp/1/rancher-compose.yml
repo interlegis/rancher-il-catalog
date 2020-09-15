@@ -2,7 +2,7 @@ version: '2'
 
 catalog:
   name: "Backup PostgreSQL to Minio bucket"
-  version: "0.0.3"
+  version: "0.0.4"
   description: "Backup a PostgreSQL database to Minio bucker periodically (using rancher-container-crontab)"
   minimum_rancher_version: v1.4.1
   questions:
